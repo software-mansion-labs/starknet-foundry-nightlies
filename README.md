@@ -10,7 +10,7 @@ Each build is identified by calendar day it was produced, and are tagged in the 
 pattern: `nightly-YYYY-MM-DD`, for example: `nightly-2025-05-23`.
 
 
-* [Go to latest nightly release →](https://github.com/software-mansion/starknet-foundry-nightlies/releases/latest)
-* [Go to all nightlies →](https://github.com/software-mansion/starknet-foundry-nightlies/releases)
+* [Go to latest nightly release →](https://github.com/foundry-rs/starknet-foundry-nightlies/releases/latest)
+* [Go to all nightlies →](https://github.com/foundry-rs/starknet-foundry-nightlies/releases)
 ---
 * [Go to Starknet Foundry main repository →](https://github.com/foundry-rs/starknet-foundry)

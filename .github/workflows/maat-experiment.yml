@@ -6,11 +6,36 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-maat-experiment:
-    name: Run experiment workflow
+  get-nightly-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-nightly-version.outputs.LATEST_NIGHTLY }}
+
+    steps:
+      - name: Get latest nightly version
+        id: get-nightly-version
+        run: echo "LATEST_NIGHTLY=$(gh release view --repo software-mansion-labs/starknet-foundry-nightlies --json tagName --jq .tagName)" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print nightly version
+        run: echo "Latest nightly version is ${{ steps.get-nightly-version.outputs.LATEST_NIGHTLY }}"
+
+  run-nightly-experiment:
     runs-on: ubuntu-latest
 
     steps:
-      - run: gh workflow run Experiment --repo software-mansion/maat -f workspace=nightly
+      - name: Run experiment for nightly workspace
+        run: gh workflow run Experiment --repo software-mansion/maat -f workspace=nightly
+        env:
+          GH_TOKEN: ${{ secrets.MAAT_CONTENTS_READ_ACTIONS_WRITE }}
+
+  run-release-experiment:
+    runs-on: ubuntu-latest
+    needs: get-nightly-version
+
+    steps:
+      - name: Run experiment with latest Scarb and nightly Foundry
+        run: gh workflow run Experiment --repo software-mansion/maat -f workspace=release -f foundry=${{ needs.get-nightly-version.outputs.version }}
         env:
           GH_TOKEN: ${{ secrets.MAAT_CONTENTS_READ_ACTIONS_WRITE }}
